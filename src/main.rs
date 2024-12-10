@@ -1,17 +1,19 @@
-use actix::{Actor, Addr};
 use actix_cors::Cors;
+use actix_web::middleware::{Compress, Logger};
 use actix_web::{http, App, HttpServer};
-use actix_web::middleware::{from_fn, Compress, Logger};
 use env::dotenv;
 use once_cell::sync::OnceCell;
 use rbatis::RBatis;
 use rbdc_mysql::MysqlDriver;
-use rs_service_util::{self, jwt::JWT, redis::RedisActor};
+use rs_service_util::redis::RedisTool;
+use rs_service_util::{self, jwt::JWT};
 use utoipa::OpenApi;
 use utoipa_actix_web::AppExt;
 use utoipa_scalar::{Scalar, Servable};
 
 mod entity;
+mod store;
+mod util;
 
 #[derive(OpenApi)]
 #[openapi(
@@ -28,7 +30,7 @@ struct ApiDoc;
 lazy_static::lazy_static! {
     static ref REDIS_KEY:String = "store_service".to_string();
     static ref RB:RBatis=RBatis::new();
-    static ref REDIS_ADDR: OnceCell<Addr<RedisActor>> = OnceCell::new();
+    static ref REDIS: OnceCell<RedisTool> = OnceCell::new();
 }
 
 #[actix_web::main]
@@ -36,18 +38,16 @@ async fn main() {
     dotenv().expect("Failed to load .env file");
     env_logger::init();
     let redis_url = std::env::var("REDIS_URL").expect("REDIS_URL must be set");
-    let actor = RedisActor::new(redis_url).await;
-    let addr: Addr<RedisActor> = actor.start();
+    let actor = RedisTool::new(redis_url).await;
 
     init_db().await;
-
-    REDIS_ADDR.set(addr.clone()).expect("set redis addr error");
+    REDIS.set(actor.clone()).expect("msg");
 
     let _ = HttpServer::new(move || {
         App::new()
             .into_utoipa_app()
             .openapi(ApiDoc::openapi())
-            // .service(utoipa_actix_web::scope("/api/user").configure(user::configure()))
+            .service(utoipa_actix_web::scope("/api/store").configure(store::configure()))
             .openapi_service(|api| Scalar::with_url("/doc", api))
             .into_app()
             .wrap(

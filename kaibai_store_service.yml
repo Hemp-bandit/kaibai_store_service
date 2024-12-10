@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kaibai-store-deployment
+  namespace: kaibai
+spec:
+  selector:
+    matchLabels:
+      app: kaibai-store
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      namespace: kaibai
+      labels:
+        app: kaibai-store
+    spec:
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: aliregistry
+      containers:
+        - name: kaibai-store-deploy
+          env:
+            - name: DATABASE_URL
+              value: mysql://root:WYSwill4290@10.1.135.74:3309/kaibai_store
+            - name: REDIS_URL
+              value: redis://:WYSwill4290@10.1.7.108:6379/1
+            - name: RUST_LOG
+              value: kaibai_store_service,actix_web,rbatis,rs_service_util
+            - name: RUST_BACKTRACE
+              value: "full"
+            - name: CORN
+              value: "false"
+          image: registry.cn-hangzhou.aliyuncs.com/wyswill_docker/kaibai_store_service:608dbb50
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kaibai-store-svc
+  namespace: kaibai
+  labels:
+    app: kaibai-store
+spec:
+  type: NodePort
+  selector:
+    app: kaibai-store
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30001
