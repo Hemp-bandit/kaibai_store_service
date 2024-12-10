@@ -1054,6 +1054,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "http_error_macro"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "rs_service_util",
+ "syn",
+]
+
+[[package]]
 name = "httparse"
 version = "1.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1303,6 +1312,7 @@ dependencies = [
  "env",
  "env_logger",
  "futures-util",
+ "http_error_macro",
  "lazy-regex",
  "lazy_static",
  "log",
@@ -2004,7 +2014,6 @@ dependencies = [
 [[package]]
 name = "rs_service_util"
 version = "0.1.1"
-source = "git+https://github.com/Hemp-bandit/rs_service_util.git?branch=dev#7b8cbed1abff8f102bfcc105ffc6b3cc1a85583f"
 dependencies = [
  "actix-web",
  "chrono",
