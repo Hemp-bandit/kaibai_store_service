@@ -16,6 +16,7 @@ mod entity;
 mod middleware;
 mod store;
 mod util;
+mod dao;
 
 #[derive(OpenApi)]
 #[openapi(
