@@ -1,8 +1,9 @@
 use actix_web::{get, post, put, web, Responder};
-use rs_service_util::{response::ResponseBody, transaction};
+use rs_service_util::response::ResponseBody;
 
 use crate::{
-    dao::store_dao::get_store_by_name, store::CreateStoreData, util::store_err::StoreError, RB,
+    store::{store_service, CreateStoreData},
+    util::store_err::StoreError,
 };
 
 #[utoipa::path(
@@ -14,19 +15,8 @@ use crate::{
 pub async fn create_store(
     req_data: web::Json<CreateStoreData>,
 ) -> Result<impl Responder, StoreError> {
-    let ex = RB.acquire().await.expect("msg");
-    // 检测是否存在
-    let db_res = get_store_by_name(&ex, &req_data.name)
-        .await
-        .map_err(|_err| StoreError::RB)?;
-    drop(ex);
-    if db_res.is_some() {
-        return Err(StoreError::StoreExists);
-    }
-
-    let tx = transaction!().await;
-    // let new_store = 
-
+    let data: CreateStoreData = req_data.into_inner();
+    store_service::create_store(data).await?;
 
     Ok(ResponseBody::success("ok"))
 }

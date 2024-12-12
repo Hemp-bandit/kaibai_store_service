@@ -5,7 +5,7 @@ use actix_web::{
     middleware::Next,
     Error,
 };
-
+use redis::AsyncCommands;
 use rs_service_util::{
     jwt::jwt_token_to_data, redis_conn, response::BizError, structs::RedisLoginData,
 };

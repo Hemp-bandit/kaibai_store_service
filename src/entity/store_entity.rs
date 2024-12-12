@@ -1,6 +1,6 @@
 use crate::store::CreateStoreData;
 use rbatis::crud;
-use rs_service_util::time::get_current_time_fmt;
+use rs_service_util::{structs::Status, time::get_current_time_fmt};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -29,7 +29,7 @@ impl StoreEntity {
             picture: data.picture,
             description: data.description,
             address: data.address,
-            shell:data.shell
+            shell: data.shell,
         }
     }
 }
