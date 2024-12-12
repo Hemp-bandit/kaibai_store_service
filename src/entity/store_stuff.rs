@@ -2,15 +2,12 @@ use rbatis::crud;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct StoreEntity {
+pub struct StoreStuffEntity {
     pub id: Option<i32>,
     pub create_time: String,
     pub update_time: String,
-    pub name: String,
-    pub picture: String,
-    pub description: String,
-    pub address: String,
-    pub status: i8,
+    pub store_id: i32,
+    pub stuff_id: i32,
 }
 
-crud!(StoreEntity {}, "store");
+crud!(StoreStuffEntity {}, "store_stuff");

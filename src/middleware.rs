@@ -5,10 +5,10 @@ use actix_web::{
     middleware::Next,
     Error,
 };
-use redis::AsyncCommands;
-use rs_service_util::{jwt::jwt_token_to_data, redis_conn, response::BizError, structs::RedisLoginData};
 
-use crate::{REDIS, REDIS_KEY};
+use rs_service_util::{
+    jwt::jwt_token_to_data, redis_conn, response::BizError, structs::RedisLoginData,
+};
 
 pub async fn jwt_mw(
     req: ServiceRequest,
@@ -61,7 +61,8 @@ async fn has_permission(req: &ServiceRequest) -> Result<bool, BizError> {
 }
 
 pub async fn check_is_login_redis(user_name: String) -> Result<bool, BizError> {
-    let key = format!("{}_{}", REDIS_KEY.to_string(), user_name);
+    let redis_key = std::env::var("REDIS_KEY").expect("REDIS_KEY must be set");
+    let key = format!("{}_{}", redis_key.to_string(), user_name);
 
     let mut rds = redis_conn!().await;
     let redis_login: Result<bool, redis::RedisError> = rds.exists(key).await;

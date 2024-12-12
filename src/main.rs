@@ -30,7 +30,6 @@ mod util;
 struct ApiDoc;
 
 lazy_static::lazy_static! {
-    static ref REDIS_KEY:String = "store_service".to_string();
     static ref RB:RBatis=RBatis::new();
     static ref REDIS: OnceCell<RedisTool> = OnceCell::new();
 }
