@@ -6,7 +6,7 @@ use actix_web::{
     Error,
 };
 use redis::AsyncCommands;
-use rs_service_util::{jwt::jwt_token_to_data, response::BizError, structs::RedisLoginData};
+use rs_service_util::{jwt::jwt_token_to_data, redis_conn, response::BizError, structs::RedisLoginData};
 
 use crate::{REDIS, REDIS_KEY};
 
@@ -63,8 +63,7 @@ async fn has_permission(req: &ServiceRequest) -> Result<bool, BizError> {
 pub async fn check_is_login_redis(user_name: String) -> Result<bool, BizError> {
     let key = format!("{}_{}", REDIS_KEY.to_string(), user_name);
 
-    let rds = REDIS.get().expect("msg");
-    let mut rds = rds.conn.clone();
+    let mut rds = redis_conn!().await;
     let redis_login: Result<bool, redis::RedisError> = rds.exists(key).await;
     let is_login = match redis_login {
         Err(err) => {

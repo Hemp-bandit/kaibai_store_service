@@ -10,9 +10,6 @@ use crate::util::store_err::StoreError;
 )]
 #[post("/create_store")]
 pub async fn create_store() -> Result<impl Responder, StoreError> {
-    if 3 > 2 {
-        return Err(StoreError::BizError);
-    }
     Ok(ResponseBody::success("ok"))
 }
 

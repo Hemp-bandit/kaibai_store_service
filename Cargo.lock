@@ -2014,7 +2014,7 @@ dependencies = [
 [[package]]
 name = "rs_service_util"
 version = "0.1.1"
-source = "git+https://github.com/Hemp-bandit/rs_service_util.git?branch=dev#7b8cbed1abff8f102bfcc105ffc6b3cc1a85583f"
+source = "git+https://github.com/Hemp-bandit/rs_service_util.git?branch=dev#af5fbc5de103c0795d8983d418ee7bdfa9c3ecef"
 dependencies = [
  "actix-web",
  "chrono",
