@@ -30,7 +30,7 @@ spec:
             - name: REDIS_URL
               value: redis://:WYSwill4290@10.1.7.108:6379/1
             - name: RUST_LOG
-              value: kaibai_store_service,actix_web,rbatis,rs_service_util
+              value: kaibai_store_service,actix_web,rbatis,rs_rs_service_util
             - name: RUST_BACKTRACE
               value: "full"
             - name: CORN

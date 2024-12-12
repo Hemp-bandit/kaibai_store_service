@@ -30,6 +30,5 @@ utoipa = {version = "5.2.0", features = ["actix_extras"]}
 utoipa-actix-web = "0.1"
 utoipa-scalar = {version = "0.2.0", features = ["actix-web"]}
 
-# rs_service_util = {git = "https://github.com/Hemp-bandit/rs_service_util.git", branch= "dev"}
-http_error_macro = {path = "../http_error_macro"}
-rs_service_util = {path = "../rs_service_utill"}
+rs_service_util = {git = "https://github.com/Hemp-bandit/rs_service_util.git", branch= "dev"}
+http_error_macro = {git = "https://github.com/Hemp-bandit/http_error_macro.git"}

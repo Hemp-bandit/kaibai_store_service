@@ -1056,9 +1056,9 @@ dependencies = [
 [[package]]
 name = "http_error_macro"
 version = "0.1.0"
+source = "git+https://github.com/Hemp-bandit/http_error_macro.git#c950bf18d810a9d502b25ab4e026c07ebc06accc"
 dependencies = [
  "quote",
- "rs_service_util",
  "syn",
 ]
 
@@ -1799,9 +1799,9 @@ dependencies = [
 
 [[package]]
 name = "rbdc"
-version = "4.5.43"
+version = "4.5.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57b275f0d8ee2eca6a8d03a62af3c6617a1439349dea3e16f617f5bd6d664c33"
+checksum = "d249aa53fa8797b164e66d7c07d6c872fa303b37a623755109a7f8ed0b70cc47"
 dependencies = [
  "async-trait",
  "bigdecimal",
@@ -1954,9 +1954,9 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.5.7"
+version = "0.5.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b6dfecf2c74bce2466cabf93f6664d6998a69eb21e39f4207930065b27b771f"
+checksum = "03a862b389f93e68874fbf580b9de08dd02facb9a788ebadaf4a3fd33cf58834"
 dependencies = [
  "bitflags",
 ]
@@ -2014,6 +2014,7 @@ dependencies = [
 [[package]]
 name = "rs_service_util"
 version = "0.1.1"
+source = "git+https://github.com/Hemp-bandit/rs_service_util.git?branch=dev#7b8cbed1abff8f102bfcc105ffc6b3cc1a85583f"
 dependencies = [
  "actix-web",
  "chrono",
@@ -2068,9 +2069,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.23.19"
+version = "0.23.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "934b404430bb06b3fae2cba809eb45a1ab1aecd64491213d7c3301b88393f8d1"
+checksum = "5065c3f250cbd332cd894be57c40fa52387247659b14a2d6041d121547903b1b"
 dependencies = [
  "once_cell",
  "ring",
@@ -2126,9 +2127,9 @@ checksum = "61697e0a1c7e512e84a621326239844a24d8207b4669b41bc18b32ea5cbf988b"
 
 [[package]]
 name = "serde"
-version = "1.0.215"
+version = "1.0.216"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6513c1ad0b11a9376da888e3e0baa0077f1aed55c17f50e7b2397136129fb88f"
+checksum = "0b9781016e935a97e8beecf0c933758c97a5520d32930e460142b4cd80c6338e"
 dependencies = [
  "serde_derive",
 ]
@@ -2144,9 +2145,9 @@ dependencies = [
 
 [[package]]
 name = "serde_derive"
-version = "1.0.215"
+version = "1.0.216"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad1e866f866923f252f05c889987993144fb74e722403468a4ebd70c3cd756c0"
+checksum = "46f859dbbf73865c6627ed570e78961cd3ac92407a2d117204c49232485da55e"
 dependencies = [
  "proc-macro2",
  "quote",

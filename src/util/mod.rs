@@ -1,1 +1,1 @@
-mod store_err;
+pub mod store_err;
