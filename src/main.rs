@@ -76,8 +76,8 @@ async fn main() {
 }
 fn gen_server_url() -> String {
     let host = "0.0.0.0";
-    let url = format!("{}:{}", host, 3000);
-    log::info!("server is on, addr http://127.0.0.1:3000\n doc:  http://127.0.0.1:3000/doc");
+    let url = format!("{}:{}", host, 3001);
+    log::info!("server is on, addr http://127.0.0.1:3001\n doc:  http://127.0.0.1:3001/doc");
     url
 }
 
