@@ -65,7 +65,7 @@ async fn main() {
             .wrap(Compress::default())
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{Referer}i"))
-            .wrap(from_fn(jwt_mw))
+            // .wrap(from_fn(jwt_mw))
     })
     .keep_alive(None)
     .shutdown_timeout(5)

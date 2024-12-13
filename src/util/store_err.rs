@@ -12,4 +12,7 @@ pub enum StoreError {
 
     #[display("店铺已存在")]
     StoreExists,
+
+    #[display("更新店铺失败")]
+    StoreUpdateFail,
 }

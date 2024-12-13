@@ -22,3 +22,21 @@ pub struct CreateStoreData {
     pub shell: String,
     pub create_by: i32, // 创建人
 }
+
+#[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
+pub struct PageQueryStoreData {
+    pub name: Option<String>,
+    pub create_by: Option<i32>, // 创建人
+    pub offset: u64,
+    pub take: u64,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
+pub struct UpdateStoreData {
+    pub id: i32,
+    pub name: Option<String>,
+    pub picture: Option<String>,
+    pub description: Option<String>,
+    pub address: Option<String>,
+    pub shell: Option<String>,
+}

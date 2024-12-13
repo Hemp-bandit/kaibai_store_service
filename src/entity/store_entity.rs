@@ -1,6 +1,6 @@
 use crate::store::CreateStoreData;
-use rbatis::crud;
-use rs_service_util::{structs::Status, time::get_current_time_fmt};
+use rbatis::{crud, impl_select};
+use rs_service_util::{time::get_current_time_fmt, Status};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

@@ -6,9 +6,7 @@ use actix_web::{
     Error,
 };
 use redis::AsyncCommands;
-use rs_service_util::{
-    jwt::jwt_token_to_data, redis_conn, response::BizError, structs::RedisLoginData,
-};
+use rs_service_util::{jwt::jwt_token_to_data, redis_conn, response::BizError, RedisLoginData};
 
 pub async fn jwt_mw(
     req: ServiceRequest,
@@ -53,11 +51,11 @@ async fn has_permission(req: &ServiceRequest) -> Result<bool, BizError> {
     let jwt_token = binding.to_str().expect("msg").to_string();
     let slice = &jwt_token[7..];
     log::info!("jwt {slice}");
-    let jwt_user = jwt_token_to_data::<RedisLoginData>(slice.to_owned())
-        .expect(&BizError::AuthError.to_string());
+    let jwt_user = jwt_token_to_data::<RedisLoginData>(slice.to_owned())?;
     log::info!("jwt_user {jwt_user:?}");
     // jwt_user.name
-    check_is_login_redis(jwt_user.name).await
+    let res = check_is_login_redis(jwt_user.name).await?;
+    Ok(res)
 }
 
 pub async fn check_is_login_redis(user_name: String) -> Result<bool, BizError> {
