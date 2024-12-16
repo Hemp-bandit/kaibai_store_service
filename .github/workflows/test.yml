@@ -19,4 +19,4 @@ jobs:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
       - name: pull repo
         run: |
-          kubectl get nodes
+          kubectl config get-contexts
