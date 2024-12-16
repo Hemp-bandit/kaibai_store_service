@@ -18,4 +18,4 @@ jobs:
         uses: steebchen/kubectl@v2.0.0
         with: # defaults to latest kubectl binary version
           config: ${{ secrets.KUBE_CONFIG }}
-          command: set image --record ${{env.docker_tag}}
+          command: set image --record registry.cn-hangzhou.aliyuncs.com/wyswill_docker/kaibai_store_service:91652d06
