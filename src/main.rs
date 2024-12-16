@@ -1,7 +1,8 @@
 use actix_cors::Cors;
-use actix_web::middleware::{Compress, Logger};
+use actix_web::middleware::{from_fn, Compress, Logger};
 use actix_web::{http, App, HttpServer};
 use env::dotenv;
+use middleware::jwt_mw;
 use once_cell::sync::OnceCell;
 use rbatis::RBatis;
 use rbdc_mysql::MysqlDriver;
@@ -12,8 +13,10 @@ use utoipa_actix_web::AppExt;
 use utoipa_scalar::{Scalar, Servable};
 
 mod entity;
+mod middleware;
 mod store;
 mod util;
+mod dao;
 
 #[derive(OpenApi)]
 #[openapi(
@@ -28,7 +31,6 @@ mod util;
 struct ApiDoc;
 
 lazy_static::lazy_static! {
-    static ref REDIS_KEY:String = "store_service".to_string();
     static ref RB:RBatis=RBatis::new();
     static ref REDIS: OnceCell<RedisTool> = OnceCell::new();
 }
@@ -63,7 +65,7 @@ async fn main() {
             .wrap(Compress::default())
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{Referer}i"))
-        // .wrap(from_fn(jwt_mw))
+            // .wrap(from_fn(jwt_mw))
     })
     .keep_alive(None)
     .shutdown_timeout(5)
@@ -74,8 +76,8 @@ async fn main() {
 }
 fn gen_server_url() -> String {
     let host = "0.0.0.0";
-    let url = format!("{}:{}", host, 3000);
-    log::info!("server is on, addr http://127.0.0.1:3000\n doc:  http://127.0.0.1:3000/doc");
+    let url = format!("{}:{}", host, 3001);
+    log::info!("server is on, addr http://127.0.0.1:3001\n doc:  http://127.0.0.1:3001/doc");
     url
 }
 

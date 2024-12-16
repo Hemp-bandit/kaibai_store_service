@@ -1799,9 +1799,9 @@ dependencies = [
 
 [[package]]
 name = "rbdc"
-version = "4.5.44"
+version = "4.5.45"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d249aa53fa8797b164e66d7c07d6c872fa303b37a623755109a7f8ed0b70cc47"
+checksum = "dae66bab36d8040f4fc5a3335f8dc40c9e10c95e228d024d3435f6a2cf4914aa"
 dependencies = [
  "async-trait",
  "bigdecimal",
@@ -2014,7 +2014,7 @@ dependencies = [
 [[package]]
 name = "rs_service_util"
 version = "0.1.1"
-source = "git+https://github.com/Hemp-bandit/rs_service_util.git?branch=dev#7b8cbed1abff8f102bfcc105ffc6b3cc1a85583f"
+source = "git+https://github.com/Hemp-bandit/rs_service_util.git?branch=dev#04c5b9de2f6ec5c98fbb238dc01a0efc55096567"
 dependencies = [
  "actix-web",
  "chrono",
@@ -2121,9 +2121,9 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "semver"
-version = "1.0.23"
+version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61697e0a1c7e512e84a621326239844a24d8207b4669b41bc18b32ea5cbf988b"
+checksum = "3cb6eb87a131f756572d7fb904f6e7b68633f09cca868c5df1c4b8d1a694bbba"
 
 [[package]]
 name = "serde"
