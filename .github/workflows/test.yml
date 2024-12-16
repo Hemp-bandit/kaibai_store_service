@@ -14,10 +14,9 @@ jobs:
           echo "git clone "
           git clone  https://github.com/Hemp-bandit/kaibai_store_service .
           ls -al
-      - name: deploy to cluster
-        uses: steebchen/kubectl@master
+      - uses: steebchen/kubectl@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
+      - name: pull repo
         run: |
           kubectl get nodes
-
