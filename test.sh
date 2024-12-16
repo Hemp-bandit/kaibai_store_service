@@ -1,7 +1,0 @@
-
-docker_tag=registry.cn-hangzhou.aliyuncs.com/wyswill_docker/kaibai_store_service:7c0f2d14
-
-K8S_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IkNNSm1RbUQzWW9zUldXNlpnSFY1NUpEV1dRXzFMd1ltRzIwWUR5R2xDVEUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlZmF1bHQtdG9rZW4tMmpkZjgiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGVmYXVsdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImUxZmI2NTBmLTQ5MGYtNGIzNy04MmExLTM1ZTI3MTc0MGNjOSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.AZrPBAJXBYxRiwGJrkCPWeLWI6NMeR9bQEv6fG3D87pmXPI9tsqwpqY5ikMF5tah1H7XqM7ALgY3Vur4gs66KDJtugH0ku3QW7MJES0r9Q2AVPbxWi2RdSSK3ZO27I2mPkzcbAcI3n1w62UXcYQBIZv8T1EecXj4x7OOmAwVQRHNryAZHw8mfItKBf7DtPClHKQwV20mB6vbOSpEIyM4UPsiTnwKV_PYI5nqWMHoQeAgwXHFISf3xpQgYuPhsn-tw_rBmnsMZjTCDKSUk0pkI10R9wJmGG8wHgOq7kUhwlyOahuFwBsy2hqoQJIagKRfdFWcEZ1hbsJ1x58hBEgiHw
-
-curl -k --request PATCH --url https://kaibai.cloud:6443/apis/apps/v1/namespaces/kaibai/deployments/kaibai-store-deployment --header "authorization: Bearer $K8S_TOKEN" --header 'content-type: application/strategic-merge-patch+json' --header 'user-agent: vscode-restclient' --data "{\"spec\": {\"template\": {\"spec\": {\"containers\": [{\"name\": \"kaibai-store-deploy\",\"image\": \"$docker_tag\"}]}}}}"
-
