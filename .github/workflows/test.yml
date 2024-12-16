@@ -14,14 +14,10 @@ jobs:
           echo "git clone "
           git clone  https://github.com/Hemp-bandit/kaibai_store_service .
           ls -al
-      # - uses: landtechnologies/k8s-toolbox@v6
-      #   with:
-      #     kubectl: "v1.18.10"
-      #     kube-config: ${{secrets.KUBE_CONFIG}}
-      - name: login_registry
+      - name: deploy to cluster
+        uses: steebchen/kubectl@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG }}
         run: |
-          config=${{secrets.KUBE_CONFIG}};
-          echo config > ~/.kube/config
-          sudo apt install kubectl -y
-          # kubectl version
+          kubectl get nodes
 
