@@ -21,6 +21,6 @@ jobs:
       - name: login_registry
         run: |
           config=${{secrets.KUBE_CONFIG}};
-          echo ${{secrets.KUBE_CONFIG}} > ~/.kube/config
+          echo config > ~/.kube/config
           kubectl version
 
