@@ -28,7 +28,7 @@ impl StoreEntity {
             create_by: data.create_by,
             picture: data.picture,
             description: data.description,
-            address: data.address,
+            address: "".to_string(),
             shell: data.shell,
         }
     }

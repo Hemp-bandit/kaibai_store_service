@@ -18,7 +18,6 @@ pub struct CreateStoreData {
     pub name: String,
     pub picture: String,
     pub description: String,
-    pub address: String,
     pub shell: String,
     pub create_by: i32, // 创建人
 }

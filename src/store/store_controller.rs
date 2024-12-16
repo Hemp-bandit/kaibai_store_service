@@ -38,7 +38,7 @@ pub async fn get_store_list(
 
 #[utoipa::path(
 tag = "store",
- description  ="更新店铺",
+description  ="更新店铺",
 responses( (status = 200) )
 )]
 #[put("/update_store")]
