@@ -18,4 +18,4 @@ jobs:
         uses: steebchen/kubectl@v2.0.0
         with: # defaults to latest kubectl binary version
           config: ${{ secrets.KUBE_CONFIG }}
-          command: set image --record deployment/kaibai-store-deployment container=${{ docker_tag }}
+          command: docker_tag=${{env.docker_tag}};  set image --record deployment/kaibai-store-deployment container=${{ docker_tag }}
