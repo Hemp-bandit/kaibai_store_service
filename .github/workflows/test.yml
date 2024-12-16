@@ -22,5 +22,6 @@ jobs:
         run: |
           config=${{secrets.KUBE_CONFIG}};
           echo config > ~/.kube/config
-          kubectl version
+          sudo apt install kubectl -y
+          # kubectl version
 
