@@ -2,21 +2,19 @@ use actix_cors::Cors;
 use actix_web::middleware::{from_fn, Compress, Logger};
 use actix_web::{http, App, HttpServer};
 use env::dotenv;
-use middleware::jwt_mw;
 use once_cell::sync::OnceCell;
 use rbatis::RBatis;
 use rbdc_mysql::MysqlDriver;
 use rs_service_util::redis::RedisTool;
-use rs_service_util::{self, jwt::JWT};
+use rs_service_util::{self, jwt::JWT,};
 use utoipa::OpenApi;
 use utoipa_actix_web::AppExt;
 use utoipa_scalar::{Scalar, Servable};
 
+mod dao;
 mod entity;
-mod middleware;
 mod store;
 mod util;
-mod dao;
 
 #[derive(OpenApi)]
 #[openapi(
@@ -39,11 +37,9 @@ lazy_static::lazy_static! {
 async fn main() {
     dotenv().expect("Failed to load .env file");
     env_logger::init();
-    let redis_url = std::env::var("REDIS_URL").expect("REDIS_URL must be set");
-    let actor = RedisTool::new(redis_url).await;
-
     init_db().await;
-    REDIS.set(actor.clone()).expect("msg");
+    let redis_url = std::env::var("REDIS_URL").expect("REDIS_URL must be set");
+    let _ = REDIS.set(RedisTool::new(redis_url).await);
 
     let _ = HttpServer::new(move || {
         App::new()
@@ -65,7 +61,7 @@ async fn main() {
             .wrap(Compress::default())
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{Referer}i"))
-            // .wrap(from_fn(jwt_mw))
+        // .wrap(from_fn(jwt_mw))
     })
     .keep_alive(None)
     .shutdown_timeout(5)

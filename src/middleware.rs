@@ -6,7 +6,7 @@ use actix_web::{
     Error,
 };
 use redis::AsyncCommands;
-use rs_service_util::{jwt::jwt_token_to_data, redis_conn, response::BizError, RedisLoginData};
+use crate::{jwt::jwt_token_to_data, redis_conn, response::BizError, RedisLoginData};
 
 pub async fn jwt_mw(
     req: ServiceRequest,
