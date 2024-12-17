@@ -30,12 +30,16 @@ pub async fn create_store(data: CreateStoreData) -> Result<(), StoreError> {
 
 pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreEntity>, StoreError> {
     let ex = RB.acquire().await.expect("msg");
+    let mut offset = data.page_no - 1;
+    if offset < 0 {
+        offset = 0;
+    }
     let records: Vec<StoreEntity> = select_store_list(
         &ex,
         data.name,
         data.create_by,
-        (data.offset - 1) * data.take,
-        data.take,
+        (offset * data.take) as u64,
+        data.take as u64,
     )
     .await
     .expect("msg");
@@ -43,7 +47,7 @@ pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreEntity
     let res = Page {
         records,
         total: 0,
-        page_no: data.offset as u64,
+        page_no: data.page_no as u64,
         page_size: data.take as u64,
         do_count: true,
     };

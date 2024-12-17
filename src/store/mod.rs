@@ -26,8 +26,8 @@ pub struct CreateStoreData {
 pub struct PageQueryStoreData {
     pub name: Option<String>,
     pub create_by: Option<i32>, // 创建人
-    pub offset: u64,
-    pub take: u64,
+    pub page_no: i64,
+    pub take: i64,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
