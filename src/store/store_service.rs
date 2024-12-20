@@ -1,13 +1,13 @@
+use super::{PageQueryStoreData, StoreListItem, UpdateStoreData};
 use crate::{
     dao::store_dao::{get_store_by_name, select_by_id, select_store_list},
-    entity::store_entity::StoreEntity,
-    util::store_err::StoreError,
+    entity::store_entity::{CreateStoreData, StoreEntity},
+    http_client,
+    util::{store_err::StoreError, structs::UserEntity},
     RB,
 };
 use rbatis::Page;
-use rs_service_util::{time::get_current_time_fmt, transaction};
-
-use super::{CreateStoreData, PageQueryStoreData, UpdateStoreData};
+use rs_service_util::{response::ResponseBody, time::get_current_time_fmt, transaction};
 
 pub async fn create_store(data: CreateStoreData) -> Result<(), StoreError> {
     let ex = RB.acquire().await.expect("msg");
@@ -28,7 +28,7 @@ pub async fn create_store(data: CreateStoreData) -> Result<(), StoreError> {
     Ok(())
 }
 
-pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreEntity>, StoreError> {
+pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreListItem>, StoreError> {
     let ex = RB.acquire().await.expect("msg");
     let mut offset = data.page_no - 1;
     if offset < 0 {
@@ -44,8 +44,23 @@ pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreEntity
     .await
     .expect("msg");
 
+    let client = http_client!();
+    let mut item_list: Vec<StoreListItem> = vec![];
+    for ele in records.into_iter() {
+        let url = format!(
+            "{}/api/user/{}",
+            std::env::var("USER_SERVICE").expect("USER_SERVICE must be set"),
+            ele.create_by
+        );
+        let response = client.get(url).send().await.expect("msg");
+
+        let user_info: ResponseBody<UserEntity> = response.json().await.expect("msg");
+        let item: StoreListItem = StoreListItem::from(ele, user_info.data);
+        item_list.push(item);
+    }
+
     let res = Page {
-        records,
+        records: item_list,
         total: 0,
         page_no: data.page_no as u64,
         page_size: data.take as u64,

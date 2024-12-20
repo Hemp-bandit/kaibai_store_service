@@ -6,7 +6,7 @@ use once_cell::sync::OnceCell;
 use rbatis::RBatis;
 use rbdc_mysql::MysqlDriver;
 use rs_service_util::redis::RedisTool;
-use rs_service_util::{self, jwt::JWT,};
+use rs_service_util::{self, jwt::JWT};
 use utoipa::OpenApi;
 use utoipa_actix_web::AppExt;
 use utoipa_scalar::{Scalar, Servable};
@@ -60,8 +60,12 @@ async fn main() {
             )
             .wrap(Compress::default())
             .wrap(Logger::default())
-            .wrap(Logger::new("%a %{Referer}i"))
-        // .wrap(from_fn(jwt_mw))
+            .wrap(Logger::new("t %P %s %{service_call}i"))
+            // .wrap(from_fn(|req, next| {
+            //     let rds = crate::REDIS.get().expect("msg");
+            //     let conn = rds.conn.clone();
+            //     rs_service_util::middleware::jwt_mw(req, next, conn)
+            // }))
     })
     .keep_alive(None)
     .shutdown_timeout(5)

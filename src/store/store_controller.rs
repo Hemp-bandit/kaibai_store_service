@@ -2,7 +2,7 @@ use actix_web::{post, put, web, Responder};
 use rs_service_util::response::ResponseBody;
 
 use crate::{
-    store::{store_service as service, CreateStoreData},
+    entity::store_entity::CreateStoreData, store::store_service as service,
     util::store_err::StoreError,
 };
 

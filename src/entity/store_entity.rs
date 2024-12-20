@@ -1,9 +1,11 @@
-use crate::store::CreateStoreData;
 use rbatis::crud;
 use rs_service_util::{time::get_current_time_fmt, Status};
 use serde::{Deserialize, Serialize};
+use utility_types::Pick;
+use utoipa::ToSchema;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Pick)]
+#[pick(arg(ident = CreateStoreData, fields(name, picture,description,shell,create_by), derive(Clone, Debug, Serialize, Deserialize, ToSchema)), forward_attrs())]
 pub struct StoreEntity {
     pub id: Option<i32>,
     pub create_time: String,

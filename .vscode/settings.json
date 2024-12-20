@@ -1,8 +1,10 @@
 {
   "cSpell.words": [
     "aliregistry",
+    "chrono",
     "dotenv",
     "rbatis",
-    "rbdc"
+    "rbdc",
+    "serde"
   ]
 }
