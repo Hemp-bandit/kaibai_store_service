@@ -13,8 +13,10 @@ use utoipa_scalar::{Scalar, Servable};
 
 mod dao;
 mod entity;
-mod store;
 mod util;
+mod store;
+mod product;
+mod order;
 
 #[derive(OpenApi)]
 #[openapi(
