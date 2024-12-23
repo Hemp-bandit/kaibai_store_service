@@ -5,7 +5,9 @@ use utility_types::Pick;
 use utoipa::ToSchema;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Pick)]
-#[pick(arg(ident = CreateStoreData, fields(name, picture,description,shell,create_by), derive(Clone, Debug, Serialize, Deserialize, ToSchema)), forward_attrs())]
+#[pick(
+    arg(ident = CreateStoreData, fields(name, picture,description,shell,create_by), derive(Clone, Debug, Serialize, Deserialize, ToSchema)), forward_attrs()
+)]
 pub struct StoreEntity {
     pub id: Option<i32>,
     pub create_time: String,

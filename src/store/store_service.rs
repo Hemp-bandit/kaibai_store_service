@@ -1,6 +1,6 @@
 use super::{PageQueryStoreData, StoreListItem, UpdateStoreData};
 use crate::{
-    dao::store_dao::{get_store_by_name, select_by_id, select_store_list},
+    dao::store_dao::{get_store_by_name, list_count, select_by_id, select_store_list},
     entity::store_entity::{CreateStoreData, StoreEntity},
     http_client,
     util::{store_err::StoreError, structs::UserEntity},
@@ -36,14 +36,17 @@ pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreListIt
     }
     let records: Vec<StoreEntity> = select_store_list(
         &ex,
-        data.name,
-        data.create_by,
+        data.name.clone(),
+        data.create_by.clone(),
         (offset * data.take) as u64,
         data.take as u64,
     )
     .await
     .expect("msg");
 
+    let total = list_count(&ex, data.name, data.create_by)
+        .await
+        .expect("msg");
     let client = http_client!();
     let mut item_list: Vec<StoreListItem> = vec![];
     for ele in records.into_iter() {
@@ -59,13 +62,7 @@ pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreListIt
         item_list.push(item);
     }
 
-    let res = Page {
-        records: item_list,
-        total: 0,
-        page_no: data.page_no as u64,
-        page_size: data.take as u64,
-        do_count: true,
-    };
+    let res = Page::new(data.page_no as u64, data.take as u64, total, item_list);
 
     Ok(res)
 }

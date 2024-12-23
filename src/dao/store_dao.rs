@@ -28,10 +28,19 @@ pub async fn select_store_list(
 ) -> Vec<StoreEntity> {
 }
 
-
+#[py_sql(
+    "
+`SELECT count(1) FROM store  WHERE status = 1`
+ if name != null:
+   ` AND name = #{name}`
+ if create_by != null:
+   ` AND create_by = #{create_by}`
+"
+)]
+pub async fn list_count(rb: &dyn Executor, name: Option<String>, create_by: Option<i32>) -> u64 {}
 
 #[py_sql(
-  "
+    "
 `SELECT * FROM store WHERE status = 1 AND id = #{id}`
 "
 )]

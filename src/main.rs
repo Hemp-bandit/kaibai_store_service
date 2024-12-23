@@ -13,10 +13,10 @@ use utoipa_scalar::{Scalar, Servable};
 
 mod dao;
 mod entity;
-mod util;
-mod store;
-mod product;
 mod order;
+mod product;
+mod store;
+mod util;
 
 #[derive(OpenApi)]
 #[openapi(
@@ -48,6 +48,7 @@ async fn main() {
             .into_utoipa_app()
             .openapi(ApiDoc::openapi())
             .service(utoipa_actix_web::scope("/api/store").configure(store::configure()))
+            .service(utoipa_actix_web::scope("/api/product").configure(product::configure()))
             .openapi_service(|api| Scalar::with_url("/doc", api))
             .into_app()
             .wrap(
@@ -63,11 +64,11 @@ async fn main() {
             .wrap(Compress::default())
             .wrap(Logger::default())
             .wrap(Logger::new("t %P %s %{service_call}i"))
-            // .wrap(from_fn(|req, next| {
-            //     let rds = crate::REDIS.get().expect("msg");
-            //     let conn = rds.conn.clone();
-            //     rs_service_util::middleware::jwt_mw(req, next, conn)
-            // }))
+        // .wrap(from_fn(|req, next| {
+        //     let rds = crate::REDIS.get().expect("msg");
+        //     let conn = rds.conn.clone();
+        //     rs_service_util::middleware::jwt_mw(req, next, conn)
+        // }))
     })
     .keep_alive(None)
     .shutdown_timeout(5)
