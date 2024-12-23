@@ -6,13 +6,15 @@ use once_cell::sync::OnceCell;
 use rbatis::RBatis;
 use rbdc_mysql::MysqlDriver;
 use rs_service_util::redis::RedisTool;
-use rs_service_util::{self, jwt::JWT,};
+use rs_service_util::{self, jwt::JWT};
 use utoipa::OpenApi;
 use utoipa_actix_web::AppExt;
 use utoipa_scalar::{Scalar, Servable};
 
 mod dao;
 mod entity;
+mod order;
+mod product;
 mod store;
 mod util;
 
@@ -46,6 +48,7 @@ async fn main() {
             .into_utoipa_app()
             .openapi(ApiDoc::openapi())
             .service(utoipa_actix_web::scope("/api/store").configure(store::configure()))
+            .service(utoipa_actix_web::scope("/api/product").configure(product::configure()))
             .openapi_service(|api| Scalar::with_url("/doc", api))
             .into_app()
             .wrap(
@@ -60,8 +63,12 @@ async fn main() {
             )
             .wrap(Compress::default())
             .wrap(Logger::default())
-            .wrap(Logger::new("%a %{Referer}i"))
-        // .wrap(from_fn(jwt_mw))
+            .wrap(Logger::new("t %P %s %{service_call}i"))
+        // .wrap(from_fn(|req, next| {
+        //     let rds = crate::REDIS.get().expect("msg");
+        //     let conn = rds.conn.clone();
+        //     rs_service_util::middleware::jwt_mw(req, next, conn)
+        // }))
     })
     .keep_alive(None)
     .shutdown_timeout(5)

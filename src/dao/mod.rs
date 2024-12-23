@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+pub mod product_dao;
 pub mod store_dao;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

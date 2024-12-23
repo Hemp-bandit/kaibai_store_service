@@ -2,7 +2,8 @@ use actix_web::{post, put, web, Responder};
 use rs_service_util::response::ResponseBody;
 
 use crate::{
-    store::{store_service as service, CreateStoreData},
+    entity::{store_entity::CreateStoreData, store_product_entity::StoreProductEntity},
+    store::store_service as service,
     util::store_err::StoreError,
 };
 
@@ -44,5 +45,18 @@ responses( (status = 200) )
 #[put("/update_store")]
 pub async fn update_store(data: web::Json<UpdateStoreData>) -> Result<impl Responder, StoreError> {
     service::update_store(data.into_inner()).await?;
+    Ok(ResponseBody::success("ok"))
+}
+
+#[utoipa::path(
+tag = "store",
+ description  ="商店绑定商品",
+responses( (status = 200) )
+)]
+#[post("/bind_product")]
+pub async fn bind_product(
+    data: web::Json<StoreProductEntity>,
+) -> Result<impl Responder, StoreError> {
+    service::bind_product(data.into_inner()).await?;
     Ok(ResponseBody::success("ok"))
 }

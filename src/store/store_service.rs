@@ -1,14 +1,20 @@
+use super::{PageQueryStoreData, StoreListItem, UpdateStoreData};
 use crate::{
-    dao::store_dao::{get_store_by_name, select_by_id, select_store_list},
-    entity::store_entity::StoreEntity,
-    util::store_err::StoreError,
+    dao::store_dao::{
+        get_store_by_name, has_bind_product, list_count, select_by_id, select_store_list,
+    },
+    entity::{
+        store_entity::{CreateStoreData, StoreEntity},
+        store_product_entity::StoreProductEntity,
+    },
+    http_client,
+    util::{store_err::StoreError, structs::UserEntity},
     RB,
 };
 use rbatis::Page;
-use rs_service_util::{time::get_current_time_fmt, transaction};
+use rs_service_util::{response::ResponseBody, time::get_current_time_fmt, transaction};
 
-use super::{CreateStoreData, PageQueryStoreData, UpdateStoreData};
-
+/// 创建商店
 pub async fn create_store(data: CreateStoreData) -> Result<(), StoreError> {
     let ex = RB.acquire().await.expect("msg");
     // 检测是否存在
@@ -28,7 +34,8 @@ pub async fn create_store(data: CreateStoreData) -> Result<(), StoreError> {
     Ok(())
 }
 
-pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreEntity>, StoreError> {
+/// 商店列表
+pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreListItem>, StoreError> {
     let ex = RB.acquire().await.expect("msg");
     let mut offset = data.page_no - 1;
     if offset < 0 {
@@ -36,25 +43,38 @@ pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreEntity
     }
     let records: Vec<StoreEntity> = select_store_list(
         &ex,
-        data.name,
-        data.create_by,
+        data.name.clone(),
+        data.create_by.clone(),
         (offset * data.take) as u64,
         data.take as u64,
     )
     .await
     .expect("msg");
 
-    let res = Page {
-        records,
-        total: 0,
-        page_no: data.page_no as u64,
-        page_size: data.take as u64,
-        do_count: true,
-    };
+    let total = list_count(&ex, data.name, data.create_by)
+        .await
+        .expect("msg");
+    let client = http_client!();
+    let mut item_list: Vec<StoreListItem> = vec![];
+    for ele in records.into_iter() {
+        let url = format!(
+            "{}/api/user/{}",
+            std::env::var("USER_SERVICE").expect("USER_SERVICE must be set"),
+            ele.create_by
+        );
+        let response = client.get(url).send().await.expect("msg");
+
+        let user_info: ResponseBody<UserEntity> = response.json().await.expect("msg");
+        let item: StoreListItem = StoreListItem::from(ele, user_info.data);
+        item_list.push(item);
+    }
+
+    let res = Page::new(data.page_no as u64, data.take as u64, total, item_list);
 
     Ok(res)
 }
 
+/// 更新商店信息
 pub async fn update_store(data: UpdateStoreData) -> Result<(), StoreError> {
     let ex = RB.acquire().await.expect("msg");
     // 检测是否存在
@@ -80,5 +100,29 @@ pub async fn update_store(data: UpdateStoreData) -> Result<(), StoreError> {
         }
     }
 
+    Ok(())
+}
+
+/// 绑定商品
+pub async fn bind_product(data: StoreProductEntity) -> Result<(), StoreError> {
+    let ex = RB.acquire().await.expect("msg");
+    let res = has_bind_product(&ex, &data).await.map_err(|err| {
+        log::error!("has_bind_product err: {:?}", err);
+        StoreError::HasBindProductFail
+    })?;
+
+    if res.is_some() {
+        return Ok(());
+    }
+
+    let tx = transaction!().await;
+    StoreProductEntity::insert(&tx, &data)
+        .await
+        .map_err(|err| {
+            log::error!("bind_product err: {:?}", err);
+            StoreError::BindProductFail
+        })?;
+
+    tx.commit().await.expect("msg");
     Ok(())
 }

@@ -3,7 +3,6 @@ use http_error_macro::ImplHttpError;
 
 #[derive(Debug, Display, Error, ImplHttpError)]
 pub enum StoreError {
-
     #[display("数据库错误")]
     RB,
 
@@ -15,4 +14,25 @@ pub enum StoreError {
 
     #[display("更新店铺失败")]
     StoreUpdateFail,
+
+    #[display("创建商品失败")]
+    CreateProductFail,
+
+    #[display("更新商品失败")]
+    UpdateProductFail,
+
+    #[display("商品不存在")]
+    SelectProductFail,
+
+    #[display("商品列表查询失败")]
+    SelectProductListFail,
+
+    #[display("列表数量失败")]
+    CountFail,
+
+    #[display("绑定商品失败")]
+    BindProductFail,
+
+    #[display("查询商品绑定失败")]
+    HasBindProductFail,
 }

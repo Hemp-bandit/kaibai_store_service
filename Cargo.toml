@@ -29,6 +29,8 @@ tokio_schedule = "0.3.2"
 utoipa = {version = "5.2.0", features = ["actix_extras"]}
 utoipa-actix-web = "0.1"
 utoipa-scalar = {version = "0.2.0", features = ["actix-web"]}
+reqwest = { version = "0.12.3", features = ["json"] }
 
 rs_service_util = {git = "https://github.com/Hemp-bandit/rs_service_util.git"}
 http_error_macro = {git = "https://github.com/Hemp-bandit/http_error_macro.git"}
+utility-types = "0.0.4"
