@@ -1,13 +1,13 @@
 use rbatis::crud;
 use rs_service_util::{time::get_current_time_fmt, Status};
 use serde::{Deserialize, Serialize};
-use utility_types::Omit;
+use utility_types::{Omit, Pick};
 use utoipa::ToSchema;
 
-#[derive(Clone, Debug, Serialize, Deserialize, Omit)]
+#[derive(Clone, Debug, Serialize, Deserialize, Omit, ToSchema)]
 #[omit(
-    arg(ident = ProductItem, fields(status), derive(Clone, Debug, Serialize, Deserialize, ToSchema),forward_attrs(),),
-    arg(ident = CreateProductReqData, fields(status, id, create_time, update_time), derive(Clone, Debug, Serialize, Deserialize, ToSchema),forward_attrs()),
+    arg(ident = ProductItem, fields(status), derive(Clone, Debug, Serialize, Deserialize),forward_attrs(),),
+    arg(ident = CreateProductReqData, fields(status, id, create_time, update_time), derive(Clone, Debug, Serialize, Deserialize,ToSchema),forward_attrs()),
 )]
 pub struct ProductEntity {
     pub id: Option<i32>,
@@ -21,7 +21,10 @@ pub struct ProductEntity {
     pub ext: String,     // 扩展字段
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
+#[derive(Clone, Debug, Serialize, Deserialize, Pick, ToSchema)]
+#[pick(
+    arg(ident = PqProductItem, fields(name), derive(Clone, Debug, Serialize, Deserialize,ToSchema),forward_attrs(),),
+)]
 pub struct UpdateProductReqData {
     pub name: Option<String>,
     pub status: Option<u8>,

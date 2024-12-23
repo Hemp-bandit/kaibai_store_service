@@ -6,10 +6,10 @@ use crate::{
     util::store_err::StoreError,
 };
 
-use super::product_service as service;
+use super::{product_service as service, PageQueryProductData};
 
 #[utoipa::path(
-  tag = "store",
+  tag = "product",
   description  ="创建商品",
   responses( (status = 200) )
 )]
@@ -34,4 +34,17 @@ pub async fn update_product(
 ) -> Result<impl Responder, StoreError> {
     service::update_product(id.into_inner(), data.into_inner()).await?;
     Ok(ResponseBody::success("ok"))
+}
+
+#[utoipa::path(
+tag = "product",
+ description  ="获取产品列表",
+responses( (status = 200) )
+)]
+#[post("/get_product_list")]
+pub async fn get_product_list(
+    data: web::Json<PageQueryProductData>,
+) -> Result<impl Responder, StoreError> {
+    let data = service::get_product_list(data.into_inner()).await?;
+    Ok(ResponseBody::default(Some(data)))
 }

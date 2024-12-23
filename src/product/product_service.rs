@@ -1,10 +1,16 @@
+use rbatis::Page;
 use rs_service_util::transaction;
 
 use crate::{
-    dao::product_dao::select_by_id,
-    entity::product_entity::{CreateProductReqData, ProductEntity, UpdateProductReqData},
+    dao::product_dao::{list_count, select_by_id, select_product_list},
+    entity::product_entity::{
+        CreateProductReqData, ProductEntity, ProductItem, UpdateProductReqData,
+    },
     util::store_err::StoreError,
+    RB,
 };
+
+use super::PageQueryProductData;
 
 pub async fn create_product(data: CreateProductReqData) -> Result<(), StoreError> {
     let entity = ProductEntity::from(data);
@@ -49,4 +55,22 @@ pub async fn update_product(id: i32, data: UpdateProductReqData) -> Result<(), S
     Ok(())
 }
 
+pub async fn get_product_list(mut data: PageQueryProductData) -> Result<Page<ProductItem>, StoreError> {
+    let ex = RB.acquire().await.expect("msg");
 
+    data.page.page_no = (data.page.page_no - 1) * data.page.take;
+
+    let list = select_product_list(&ex, &data.data).await.map_err(|er| {
+        log::error!("select_product_list fail:{:?}", er);
+        StoreError::SelectProductListFail
+    })?;
+
+    let total = list_count(&ex, &data.data).await.map_err(|er| {
+        log::error!("select_product_list fail:{:?}", er);
+        StoreError::CountFail
+    })?;
+
+    let res = Page::new(data.page.page_no as u64, data.page.take as u64, total, list);
+
+    Ok(res)
+}

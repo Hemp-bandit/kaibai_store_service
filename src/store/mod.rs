@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use utility_types::Pick;
 use utoipa::ToSchema;
 use utoipa_actix_web::service_config::ServiceConfig;
 
@@ -15,7 +14,6 @@ pub fn configure() -> impl FnOnce(&mut ServiceConfig) {
         config.service(store_controller::get_store_list);
     }
 }
-
 
 #[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
 pub struct PageQueryStoreData {
@@ -35,7 +33,7 @@ pub struct UpdateStoreData {
     pub shell: Option<String>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, Pick)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct StoreListItem {
     pub id: i32,
     pub create_time: String,
@@ -47,6 +45,7 @@ pub struct StoreListItem {
     pub address: String,
     pub shell: String, // 销售方向
 }
+
 impl StoreListItem {
     pub fn from(data: StoreEntity, user: UserEntity) -> Self {
         Self {

@@ -23,4 +23,10 @@ pub enum StoreError {
 
     #[display("商品不存在")]
     SelectProductFail,
+
+    #[display("商品列表查询失败")]
+    SelectProductListFail,
+
+    #[display("列表数量失败")]
+    CountFail,
 }

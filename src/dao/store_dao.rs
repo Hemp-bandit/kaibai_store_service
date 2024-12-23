@@ -11,7 +11,7 @@ pub async fn get_store_by_name(rb: &dyn Executor, name: &str) -> Option<IdRes> {
 
 #[py_sql(
     "
-`SELECT * FROM store WHERE status = 1`
+`SELECT id,create_time,update_time,status,create_by,name,picture,description,address,shell FROM store WHERE status = 1`
  if name != null:
    ` AND name = #{name}`
  if create_by != null:
@@ -41,7 +41,7 @@ pub async fn list_count(rb: &dyn Executor, name: Option<String>, create_by: Opti
 
 #[py_sql(
     "
-`SELECT * FROM store WHERE status = 1 AND id = #{id}`
+`SELECT id,create_time,update_time,status,create_by,name,picture,description,address,shell FROM store WHERE status = 1 AND id = #{id}`
 "
 )]
 pub async fn select_by_id(rb: &dyn Executor, id: i32) -> Option<StoreEntity> {}
