@@ -29,4 +29,10 @@ pub enum StoreError {
 
     #[display("列表数量失败")]
     CountFail,
+
+    #[display("绑定商品失败")]
+    BindProductFail,
+
+    #[display("查询商品绑定失败")]
+    HasBindProductFail,
 }

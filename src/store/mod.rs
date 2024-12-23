@@ -12,6 +12,7 @@ pub fn configure() -> impl FnOnce(&mut ServiceConfig) {
         config.service(store_controller::create_store);
         config.service(store_controller::update_store);
         config.service(store_controller::get_store_list);
+        config.service(store_controller::bind_product);
     }
 }
 

@@ -1,7 +1,12 @@
 use super::{PageQueryStoreData, StoreListItem, UpdateStoreData};
 use crate::{
-    dao::store_dao::{get_store_by_name, list_count, select_by_id, select_store_list},
-    entity::store_entity::{CreateStoreData, StoreEntity},
+    dao::store_dao::{
+        get_store_by_name, has_bind_product, list_count, select_by_id, select_store_list,
+    },
+    entity::{
+        store_entity::{CreateStoreData, StoreEntity},
+        store_product_entity::StoreProductEntity,
+    },
     http_client,
     util::{store_err::StoreError, structs::UserEntity},
     RB,
@@ -9,6 +14,7 @@ use crate::{
 use rbatis::Page;
 use rs_service_util::{response::ResponseBody, time::get_current_time_fmt, transaction};
 
+/// 创建商店
 pub async fn create_store(data: CreateStoreData) -> Result<(), StoreError> {
     let ex = RB.acquire().await.expect("msg");
     // 检测是否存在
@@ -28,6 +34,7 @@ pub async fn create_store(data: CreateStoreData) -> Result<(), StoreError> {
     Ok(())
 }
 
+/// 商店列表
 pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreListItem>, StoreError> {
     let ex = RB.acquire().await.expect("msg");
     let mut offset = data.page_no - 1;
@@ -67,6 +74,7 @@ pub async fn get_store_list(data: PageQueryStoreData) -> Result<Page<StoreListIt
     Ok(res)
 }
 
+/// 更新商店信息
 pub async fn update_store(data: UpdateStoreData) -> Result<(), StoreError> {
     let ex = RB.acquire().await.expect("msg");
     // 检测是否存在
@@ -92,5 +100,29 @@ pub async fn update_store(data: UpdateStoreData) -> Result<(), StoreError> {
         }
     }
 
+    Ok(())
+}
+
+/// 绑定商品
+pub async fn bind_product(data: StoreProductEntity) -> Result<(), StoreError> {
+    let ex = RB.acquire().await.expect("msg");
+    let res = has_bind_product(&ex, &data).await.map_err(|err| {
+        log::error!("has_bind_product err: {:?}", err);
+        StoreError::HasBindProductFail
+    })?;
+
+    if res.is_some() {
+        return Ok(());
+    }
+
+    let tx = transaction!().await;
+    StoreProductEntity::insert(&tx, &data)
+        .await
+        .map_err(|err| {
+            log::error!("bind_product err: {:?}", err);
+            StoreError::BindProductFail
+        })?;
+
+    tx.commit().await.expect("msg");
     Ok(())
 }
