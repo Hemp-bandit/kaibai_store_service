@@ -1,4 +1,4 @@
-use rbatis::crud;
+use rbatis::{crud, rbdc::Decimal};
 use rs_service_util::{time::get_current_time_fmt, Status};
 use serde::{Deserialize, Serialize};
 use utility_types::{Omit, Pick};
@@ -6,7 +6,6 @@ use utoipa::ToSchema;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Omit, ToSchema)]
 #[omit(
-    arg(ident = ProductItem, fields(status), derive(Clone, Debug, Serialize, Deserialize),forward_attrs(),),
     arg(ident = CreateProductReqData, fields(status, id, create_time, update_time), derive(Clone, Debug, Serialize, Deserialize,ToSchema),forward_attrs()),
 )]
 pub struct ProductEntity {
@@ -19,6 +18,31 @@ pub struct ProductEntity {
     pub picture: String, // 图片
     pub count: i32,      // 库存
     pub ext: String,     // 扩展字段
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ProductItem {
+    pub id: Option<i32>,
+    pub create_time: String,
+    pub update_time: String,
+    pub name: String,
+    pub picture: String,
+    pub count: i32,
+    pub ext: String,
+    pub price: Decimal,
+}
+impl From<ProductEntity> for ProductItem {
+    fn from(src: ProductEntity) -> Self {
+        Self {
+            id: src.id,
+            create_time: src.create_time,
+            update_time: src.update_time,
+            name: src.name,
+            picture: src.picture,
+            count: src.count,
+            ext: src.ext,
+            price: Decimal::from_f64(src.price).unwrap(),
+        }
+    }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Pick, ToSchema)]
