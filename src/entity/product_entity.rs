@@ -21,6 +21,16 @@ pub struct ProductEntity {
     pub ext: String,     // 扩展字段
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
+pub struct UpdateProductReqData {
+    pub name: Option<String>,
+    pub status: Option<u8>,
+    pub price: Option<f64>,
+    pub picture: Option<String>,
+    pub count: Option<i32>,
+    pub ext: Option<String>,
+}
+
 impl Default for ProductEntity {
     fn default() -> Self {
         Self {

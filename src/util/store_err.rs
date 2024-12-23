@@ -16,8 +16,11 @@ pub enum StoreError {
     StoreUpdateFail,
 
     #[display("创建商品失败")]
-    createProductFail,
+    CreateProductFail,
 
     #[display("更新商品失败")]
-    updateProductFail,
+    UpdateProductFail,
+
+    #[display("商品不存在")]
+    SelectProductFail,
 }
