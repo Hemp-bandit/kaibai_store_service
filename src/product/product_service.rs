@@ -1,4 +1,4 @@
-use rbatis::Page;
+use rbatis::{rbdc::Decimal, Page};
 use rs_service_util::transaction;
 
 use crate::{
@@ -40,10 +40,14 @@ pub async fn update_product(id: i32, data: UpdateProductReqData) -> Result<(), S
 
     entity.name = data.name.unwrap_or(entity.name);
     entity.picture = data.picture.unwrap_or(entity.picture);
-    entity.price = data.price.unwrap_or(entity.price);
     entity.count = data.count.unwrap_or(entity.count);
     entity.ext = data.ext.unwrap_or(entity.ext);
     entity.update_time = rs_service_util::time::get_current_time_fmt();
+
+    entity.price = match data.price {
+        None => entity.price,
+        Some(price) => Decimal::from_f64(price).unwrap(),
+    };
 
     ProductEntity::update_by_column(&tx, &entity, "id")
         .await
@@ -52,10 +56,13 @@ pub async fn update_product(id: i32, data: UpdateProductReqData) -> Result<(), S
             StoreError::UpdateProductFail
         })?;
 
+    tx.commit().await.expect("msg");
     Ok(())
 }
 
-pub async fn get_product_list(mut data: PageQueryProductData) -> Result<Page<ProductItem>, StoreError> {
+pub async fn get_product_list(
+    mut data: PageQueryProductData,
+) -> Result<Page<ProductItem>, StoreError> {
     let ex = RB.acquire().await.expect("msg");
 
     data.page.page_no = (data.page.page_no - 1) * data.page.take;
