@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use utoipa_actix_web::service_config::ServiceConfig;
 
-use crate::{entity::product_entity::PqProductItem, util::structs::PageData};
+use crate::util::structs::PageData;
 
 mod product_controller;
 mod product_service;
@@ -17,6 +17,6 @@ pub fn configure() -> impl FnOnce(&mut ServiceConfig) {
 
 #[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
 pub struct PageQueryProductData {
-    pub data: PqProductItem,
+    pub name: Option<String>,
     pub page: PageData,
 }

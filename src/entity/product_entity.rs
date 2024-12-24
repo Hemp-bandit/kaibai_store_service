@@ -1,7 +1,7 @@
 use rbatis::{crud, rbdc::Decimal};
 use rs_service_util::{time::get_current_time_fmt, Status};
 use serde::{Deserialize, Serialize};
-use utility_types::{Omit, Pick};
+use utility_types::Omit;
 use utoipa::ToSchema;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Omit)]
@@ -26,12 +26,8 @@ pub struct CreateProductReqData {
     pub price: f64,
     pub picture: String,
     pub count: i32,
-    pub ext: String,
 }
-#[derive(Clone, Debug, Serialize, Deserialize, Pick, ToSchema)]
-#[pick(
-    arg(ident = PqProductItem, fields(name), derive(Clone, Debug, Serialize, Deserialize,ToSchema),forward_attrs(),),
-)]
+#[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
 pub struct UpdateProductReqData {
     pub name: Option<String>,
     pub status: Option<u8>,
@@ -68,7 +64,7 @@ impl From<CreateProductReqData> for ProductEntity {
             price: Decimal::from_f64(data.price).unwrap(),
             picture: data.picture,
             count: data.count,
-            ext: data.ext,
+            ext: "".to_string(),
         }
     }
 }

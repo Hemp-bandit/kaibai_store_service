@@ -72,7 +72,7 @@ pub async fn get_product_list(
         StoreError::SelectProductListFail
     })?;
 
-    let total = list_count(&ex, &data.data).await.map_err(|er| {
+    let total = list_count(&ex, &data).await.map_err(|er| {
         log::error!("select_product_list fail:{:?}", er);
         StoreError::CountFail
     })?;
