@@ -148,7 +148,7 @@ pub async fn get_bind_products(
 ) -> Result<Page<ProductItem>, StoreError> {
     let ex = RB.acquire().await.expect("msg");
     data.page.page_no = (data.page.page_no - 1) * data.page.take;
-    
+
     let list = get_bind_product(&ex, &data).await.map_err(|err| {
         log::error!("get_bind_products err: {:?}", err);
         StoreError::GetBindProductFail

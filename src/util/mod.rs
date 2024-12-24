@@ -15,6 +15,7 @@ macro_rules! http_client {
         );
         let client = reqwest::Client::builder()
             .default_headers(headers)
+            .timeout(std::time::Duration::from_secs(30))
             .build()
             .expect("build client faille");
         client
