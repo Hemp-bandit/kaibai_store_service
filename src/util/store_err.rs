@@ -32,7 +32,9 @@ pub enum StoreError {
 
     #[display("绑定商品失败")]
     BindProductFail,
+    #[display("解除绑定商品失败")]
+    UnbindProductFail,
 
     #[display("查询商品绑定失败")]
-    HasBindProductFail,
+    GetBindProductFail,
 }

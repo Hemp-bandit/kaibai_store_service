@@ -67,7 +67,7 @@ pub async fn get_product_list(
 
     data.page.page_no = (data.page.page_no - 1) * data.page.take;
 
-    let list = select_product_list(&ex, &data.data).await.map_err(|er| {
+    let list = select_product_list(&ex, &data).await.map_err(|er| {
         log::error!("select_product_list fail:{:?}", er);
         StoreError::SelectProductListFail
     })?;

@@ -52,3 +52,11 @@ pub async fn select_by_id(rb: &dyn Executor, id: i32) -> Option<StoreEntity> {}
 "
 )]
 pub async fn has_bind_product(rb: &dyn Executor, data: &StoreProductEntity) -> Option<i32> {}
+
+
+#[py_sql(
+  "
+`DELETE FROM store_product WHERE store_id=#{data.store_id} AND product_id = #{data.product_id}`
+"
+)]
+pub async fn delete_bind_product(rb: &dyn Executor, data: &StoreProductEntity) -> Option<i32> {}

@@ -1,9 +1,14 @@
-use super::{PageQueryStoreData, StoreListItem, UpdateStoreData};
+use super::{PageQueryStoreBindData, PageQueryStoreData, StoreListItem, UpdateStoreData};
 use crate::{
-    dao::store_dao::{
-        get_store_by_name, has_bind_product, list_count, select_by_id, select_store_list,
+    dao::{
+        product_dao::get_bind_product,
+        store_dao::{
+            delete_bind_product, get_store_by_name, has_bind_product, list_count, select_by_id,
+            select_store_list,
+        },
     },
     entity::{
+        product_entity::ProductItem,
         store_entity::{CreateStoreData, StoreEntity},
         store_product_entity::StoreProductEntity,
     },
@@ -108,7 +113,7 @@ pub async fn bind_product(data: StoreProductEntity) -> Result<(), StoreError> {
     let ex = RB.acquire().await.expect("msg");
     let res = has_bind_product(&ex, &data).await.map_err(|err| {
         log::error!("has_bind_product err: {:?}", err);
-        StoreError::HasBindProductFail
+        StoreError::GetBindProductFail
     })?;
 
     if res.is_some() {
@@ -125,4 +130,31 @@ pub async fn bind_product(data: StoreProductEntity) -> Result<(), StoreError> {
 
     tx.commit().await.expect("msg");
     Ok(())
+}
+
+pub async fn unbind_product(data: StoreProductEntity) -> Result<(), StoreError> {
+    let tx = transaction!().await;
+    delete_bind_product(&tx, &data).await.map_err(|err| {
+        log::error!("unbind_product err: {:?}", err);
+        StoreError::UnbindProductFail
+    })?;
+
+    tx.commit().await.expect("msg");
+    Ok(())
+}
+
+pub async fn get_bind_products(
+    mut data: PageQueryStoreBindData,
+) -> Result<Page<ProductItem>, StoreError> {
+    let ex = RB.acquire().await.expect("msg");
+    data.page.page_no = (data.page.page_no - 1) * data.page.take;
+    
+    let list = get_bind_product(&ex, &data).await.map_err(|err| {
+        log::error!("get_bind_products err: {:?}", err);
+        StoreError::GetBindProductFail
+    })?;
+
+
+    let p = Page::new(data.page.page_no as u64, data.page.take as u64, 0, list);
+    Ok(p)
 }

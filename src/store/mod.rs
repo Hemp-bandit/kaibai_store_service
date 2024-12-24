@@ -2,7 +2,10 @@ use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use utoipa_actix_web::service_config::ServiceConfig;
 
-use crate::{entity::store_entity::StoreEntity, util::structs::UserEntity};
+use crate::{
+    entity::store_entity::StoreEntity,
+    util::structs::{PageData, UserEntity},
+};
 
 mod store_controller;
 mod store_service;
@@ -13,6 +16,8 @@ pub fn configure() -> impl FnOnce(&mut ServiceConfig) {
         config.service(store_controller::update_store);
         config.service(store_controller::get_store_list);
         config.service(store_controller::bind_product);
+        config.service(store_controller::unbind_product);
+        config.service(store_controller::get_bind_products);
     }
 }
 
@@ -61,4 +66,10 @@ impl StoreListItem {
             update_time: data.update_time,
         }
     }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, ToSchema)]
+pub struct PageQueryStoreBindData {
+    pub id: i32,
+    pub page: PageData,
 }
