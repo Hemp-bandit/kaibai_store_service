@@ -1,4 +1,4 @@
-use actix_web::{post, put, web, Responder};
+use actix_web::{delete, post, put, web, Responder};
 use rs_service_util::response::ResponseBody;
 
 use crate::{
@@ -7,7 +7,7 @@ use crate::{
     util::store_err::StoreError,
 };
 
-use super::{PageQueryStoreData, UpdateStoreData};
+use super::{PageQueryStoreBindData, PageQueryStoreData, UpdateStoreData};
 
 #[utoipa::path(
   tag = "store",
@@ -59,4 +59,30 @@ pub async fn bind_product(
 ) -> Result<impl Responder, StoreError> {
     service::bind_product(data.into_inner()).await?;
     Ok(ResponseBody::success("ok"))
+}
+
+#[utoipa::path(
+tag = "store",
+ description  ="解除商品绑定",
+responses( (status = 200) )
+)]
+#[delete("/unbind_product")]
+pub async fn unbind_product(
+    data: web::Json<StoreProductEntity>,
+) -> Result<impl Responder, StoreError> {
+    service::unbind_product(data.into_inner()).await?;
+    Ok(ResponseBody::success("ok"))
+}
+
+#[utoipa::path(
+tag = "store",
+ description  ="获取商铺中的商品",
+responses( (status = 200) )
+)]
+#[post("/get_bind_products")]
+pub async fn get_bind_products(
+    data: web::Json<PageQueryStoreBindData>,
+) -> Result<impl Responder, StoreError> {
+    let list = service::get_bind_products(data.into_inner()).await?;
+    Ok(ResponseBody::default(Some(list)))
 }
